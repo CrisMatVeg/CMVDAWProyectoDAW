@@ -23,10 +23,12 @@
         - [Verficación del servicio](#verficación-del-servicio)
         - [Virtual Hosts](#virtual-hosts)
         - [Permisos y usuarios](#permisos-y-usuarios)
-        - [HTTPS](#https)
+        - [Ficheros .log de Apache](#ficheros-log-de-apache)
       - [1.1.3 PHP](#113-php)
         - [**Proceso para instalar y configurar PHP 8.3 como servicio FPM (FastCGI Process Manager) en un servidor Apache sobre Ubuntu**](#proceso-para-instalar-y-configurar-php-83-como-servicio-fpm-fastcgi-process-manager-en-un-servidor-apache-sobre-ubuntu)
-      - [1.1.4 MySQL](#114-mysql)
+        - [Módulo php8.3-intl](#módulo-php83-intl)
+        - [Ficheros .log de PHP](#ficheros-log-de-php)
+      - [1.1.4 MariaDB](#114-mariadb)
       - [1.1.5 XDebug](#115-xdebug)
       - [1.1.6 Servidor web seguro (HTTPS)](#116-servidor-web-seguro-https)
       - [1.1.7 DNS](#117-dns)
@@ -187,36 +189,7 @@ sudo chown -R operadorweb:www-data /var/www/html
 #Cambiar permisos de la carpeta:
 sudo chmod -R 775 /var/www/html
 ```
-##### HTTPS
-![Alt](webroot/images/https0.png)
-```bash
-#Para crear certificado digital:
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/"nombre".key -out /etc/ssl/certs/"nombre".crt
-
-luego nos pedirá varios datos, los ponemos y ya estaría creado
-#Comprobar certificados en:
-sudo ls /etc/ssl/private |grep "nombre"
-sudo ls /etc/ssl/certs |grep "nombre"
-
-#Habilitar módulo ssl
-sudo a2enmod ssl
-
-#Crear (o copiar) configuración del sitio seguro
-sudo cp default-sss.conf "nombre".conf
-
-#Cambiar rutas al certificado dentro de "nombre".conf donde he marcado en verde
-```
-![Alt](webroot/images/https1.png)
-```bash
-#Activar puerto 443
-sudo ufw allow 443
-
-#Activar sitio seguro
-sudo a2ensite "nombre".conf
-
-#Reiniciar servidor apache
-sudo systemctl restart apache2
-```
+##### Ficheros .log de Apache
 
 #### 1.1.3 PHP
 ##### **Proceso para instalar y configurar PHP 8.3 como servicio FPM (FastCGI Process Manager) en un servidor Apache sobre Ubuntu**
@@ -263,9 +236,96 @@ En **/etc/php/8.3/apache2/php.ini** y **/etc/php/8.3/fpm/php.ini**
 
 ![Alt](webroot/images/memory_limit_php.png)
 
-#### 1.1.4 MySQL
+##### Módulo php8.3-intl
+Permite que PHP muestre información adaptada a la región e idioma, sin que tengas que hacerlo manualmente.
+```bash
+#Instalar
+sudo apt install php8.3-intl
+sudo systemctl restart php-fpm
+```
+En **/etc/php/8.3/apache2/php.ini** y **/etc/php/8.3/fpm/php.ini**
+
+- Cambiar **date.timezone** a "Europe/Madrid"
+
+![Alt](webroot/images/datetimezone1.png)
+##### Ficheros .log de PHP
+
+#### 1.1.4 MariaDB
+```bash
+#Instalar MariaDB
+sudo apt udpate
+sudo apt install mariadb-server -y
+
+#Cambiar en el fichero indicado la linea bind-address = 127.0.0.1 (lo cambiamos a 0.0.0.0)
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+```
+![Alt](webroot/images/mariadb1.png)
+```bash
+#Reiniciamos el servicio
+sudo systemctl restart mariadb
+
+#Comprobamos puerto usado por MariaDB (usará el 3306 por defecto)
+sudo ss -punta |grep mariadb
+
+#Lo habilitamos
+sudo ufw allow 3306
+
+#Entramos en la consola de MariaDB
+sudo mariadb
+
+#Creamos un nuevo usuario
+CREATE USER 'adminsql'@'%' IDENTIFIED BY 'paso'
+GRANT ALL ON *.* TO 'adminsql'@'%' WITH GRANT OPTION;
+
+#Listar todos los usuarios y desde que host pueden conectarse
+SELECT User, Host FROM mysql.user;
+
+#Asegurar MariaDB ejecutando un sript de seguridad
+sudo mysql_secure_installation
+
+- En el primer paso preguntará por la contraseña de root para MariaDB, pulsa la tecla Enter ya que no hay contraseña definida.
+- La siguiente, preguntará si quieres asignar una contraseña para el usuario “root”, le damos que si y le ponemos una.
+- En el tercer paso preguntará si quieres eliminar usuario anónimo, aquí indica que Sí quieres borrar los datos.
+- Después preguntará si quieres desactivar el acceso remoto del usuario “root”, aquí indica que Sí quieres desactivar acceso remoto para usuario por seguridad.
+- De nuevo preguntará si quieres eliminar la base de datos test, aquí indica de nuevo que Sí quieres borrar las base de datos de prueba.
+- Por último, preguntará si quieres recargar privilegios, aquí indica que Sí.
+```
 #### 1.1.5 XDebug
+```bash
+#Instalar
+sudo apt install php8.3-xdebug
+```
+
 #### 1.1.6 Servidor web seguro (HTTPS)
+![Alt](webroot/images/https0.png)
+```bash
+#Para crear certificado digital:
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/"nombre".key -out /etc/ssl/certs/"nombre".crt
+
+luego nos pedirá varios datos, los ponemos y ya estaría creado
+#Comprobar certificados en:
+sudo ls /etc/ssl/private |grep "nombre"
+sudo ls /etc/ssl/certs |grep "nombre"
+
+#Habilitar módulo ssl
+sudo a2enmod ssl
+
+#Crear (o copiar) configuración del sitio seguro
+sudo cp default-sss.conf "nombre".conf
+
+#Cambiar rutas al certificado dentro de "nombre".conf donde he marcado en verde
+```
+![Alt](webroot/images/https1.png)
+```bash
+#Activar puerto 443
+sudo ufw allow 443
+
+#Activar sitio seguro
+sudo a2ensite "nombre".conf
+
+#Reiniciar servidor apache
+sudo systemctl restart apache2
+```
 #### 1.1.7 DNS
 #### 1.1.8 SFTP
 #### 1.1.9 Apache Tomcat
