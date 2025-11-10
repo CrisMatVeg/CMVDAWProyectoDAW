@@ -18,36 +18,38 @@
         - [**Configuración fecha y hora**](#configuración-fecha-y-hora)
         - [**Cuentas administradoras**](#cuentas-administradoras)
         - [**Habilitar cortafuegos**](#habilitar-cortafuegos)
-      - [1.1.2 Instalación del servidor web](#112-instalación-del-servidor-web)
+          - [Monitorizacion](#monitorizacion)
+          - [Mantenimiento](#mantenimiento)
+      - [1.1.2 Instalación del servidor web Apache HTTP](#112-instalación-del-servidor-web-apache-http)
         - [Instalación](#instalación)
         - [Verficación del servicio](#verficación-del-servicio)
         - [Virtual Hosts](#virtual-hosts)
         - [Permisos y usuarios](#permisos-y-usuarios)
         - [Ficheros .log de Apache](#ficheros-log-de-apache)
       - [1.1.3 PHP](#113-php)
-        - [**Proceso para instalar y configurar PHP 8.3 como servicio FPM (FastCGI Process Manager) en un servidor Apache sobre Ubuntu**](#proceso-para-instalar-y-configurar-php-83-como-servicio-fpm-fastcgi-process-manager-en-un-servidor-apache-sobre-ubuntu)
+        - [Proceso para instalar y configurar PHP 8.3 como servicio FPM (FastCGI Process Manager) en un servidor Apache sobre Ubuntu](#proceso-para-instalar-y-configurar-php-83-como-servicio-fpm-fastcgi-process-manager-en-un-servidor-apache-sobre-ubuntu)
         - [Módulo php8.3-intl](#módulo-php83-intl)
         - [Ficheros .log de PHP](#ficheros-log-de-php)
       - [1.1.4 MariaDB](#114-mariadb)
       - [1.1.5 XDebug](#115-xdebug)
-      - [1.1.6 Servidor web seguro (HTTPS)](#116-servidor-web-seguro-https)
+      - [1.1.6 Servidor web seguro Apache HTTPS](#116-servidor-web-seguro-apache-https)
+        - [ErrorDocument](#errordocument)
+        - [Redirección HTTP a HTTPS](#redirección-http-a-https)
+        - [Enjaular Usuarios](#enjaular-usuarios)
       - [1.1.7 DNS](#117-dns)
       - [1.1.8 SFTP](#118-sftp)
       - [1.1.9 Apache Tomcat](#119-apache-tomcat)
       - [1.1.10 LDAP](#1110-ldap)
-    - [1.2 Windows 11](#12-windows-11)
-      - [1.2.1 **Configuración inicial**](#121-configuración-inicial)
-        - [**Nombre y configuración de red**](#nombre-y-configuración-de-red)
-        - [**Cuentas administradoras**](#cuentas-administradoras-1)
       - [1.2.2 **Navegadores**](#122-navegadores)
       - [1.2.3 **MobaXTerm**](#123-mobaxterm)
       - [1.2.4 **Netbeans**](#124-netbeans)
         - [**Crear Proyecto**](#crear-proyecto)
         - [**Eliminar Proyecto**](#eliminar-proyecto)
       - [1.2.5 **Visual Studio Code**](#125-visual-studio-code)
-  - [2. GitHub](#2-github)
-  - [3.Entorno de Explotación](#3entorno-de-explotación)
 
+[**Windows 11**](./READMEW11.md)\
+[**Git**](./READMEGIT.md)\
+[**Entorno de Explotación**](./READMEEE.md)
 ## 1. Entorno de Desarrollo
 
 ### 1.1 Ubuntu Server 24.04.3 LTS
@@ -71,14 +73,16 @@ hostname
 #Se cambia con:
 1. sudo hostnamectl set-hostname "nombre"
 2. sudo nano /etc/hosts y cambiando la linea donde pone 127.0.1.1
-
 ```
+![Alt](webroot/images/hostname1.png)
+
 > **Memoria RAM**: 2G\
 > **Particiones**: 150G(/) y resto (/var)\
 ```bash
 #Se ve con:
 df -h
 ```
+![Alt](webroot/images/df1.png)
 > **Configuración de red interface**: enp0s3\
 > **Dirección IP** :10.199.8.248/22\
 > **GW**: 10.199.8.1/22\
@@ -161,7 +165,18 @@ sudo ufw status [numbered]
 #Para eliminar algún puerto
 sudo ufw delete "nº de puerto (ver con numbered)"
 ``` 
-#### 1.1.2 Instalación del servidor web
+###### Monitorizacion
+```bash
+sudo ufw status verbose    # Mostramos el estado detallado del cortafuegos y las reglas activas
+```
+###### Mantenimiento
+```bash
+# Desactivamos el cortafuegos temporalmente
+sudo ufw disable
+# Reseteamos todas las reglas a la configuración inicial           
+sudo ufw reset             
+```
+#### 1.1.2 Instalación del servidor web Apache HTTP
 
 ##### Instalación
 ```bash
@@ -189,10 +204,20 @@ sudo chown -R operadorweb:www-data /var/www/html
 #Cambiar permisos de la carpeta:
 sudo chmod -R 775 /var/www/html
 ```
+Los archivos de configuracion de Apache se encuentran en **``/etc/apache2/``**:
+  - **``apache2.conf``**: es el archivo de configuracion inicial. Es el primer fichero que se ejecuta cuando arrancamos el servidor.
+  - **``ports.conf``**: donde se definen los puertos en los que Apache escuchará las conexiones
+  - **``mods-available/``**: Contiene todos los módulos de Apache que están instalados en el sistema.
+  - **``mods-enabled/``**: Contiene enlaces simbólicos a los módulos de mods-available/ que están activos, es decir, cargados y funcionando en el servidor.
+  - **``conf-available/``**: Almacena archivos de configuración global mediante enlaces simbólicos influyendo en la configuración general del servidor.
+  - **``conf-enabled/``**: Contiene enlaces simbólicos a los archivos de conf-available/ que están activos, aplicando su configuración al servidor.
+  - **``sites-available/``**: Guarda archivos de configuración de sitios virtuales mediante enlaces simbólicos, permitiendo configurar diferentes sitios alojados en el mismo servidor
+  - **``sites-enabled/``**: Contiene enlaces simbólicos a los archivos de sites-available/ que están activos, habilitando los sitios virtuales correspondientes.
+
 ##### Ficheros .log de Apache
 
 #### 1.1.3 PHP
-##### **Proceso para instalar y configurar PHP 8.3 como servicio FPM (FastCGI Process Manager) en un servidor Apache sobre Ubuntu**
+##### Proceso para instalar y configurar PHP 8.3 como servicio FPM (FastCGI Process Manager) en un servidor Apache sobre Ubuntu
 ```bash
 #Instala herramientas para administrar los repositorios de software, como add-apt-repository
 sudo apt install software-properties-common -y
@@ -294,9 +319,22 @@ sudo mysql_secure_installation
 ```bash
 #Instalar
 sudo apt install php8.3-xdebug
+
+#Entrar en /etc/php/8.3/fpm/conf.d/20-xdebug.ini y añadir
+xdebug.mode=develop,debug
+xdebug.start_with_request=yes
+xdebug.client_host=127.0.0.1
+xdebug.client_port=9003
+xdebug.log=/tmp/xdebug.log
+xdebug.log_level=7
+xdebug.idekey="netbeans-xdebug"
+xdebug.discover_client_host=1
+
+#Reiniciar servidor
+sudo systemctl restart php8.3-fpm
 ```
 
-#### 1.1.6 Servidor web seguro (HTTPS)
+#### 1.1.6 Servidor web seguro Apache HTTPS
 ![Alt](webroot/images/https0.png)
 ```bash
 #Para crear certificado digital:
@@ -326,15 +364,76 @@ sudo a2ensite "nombre".conf
 #Reiniciar servidor apache
 sudo systemctl restart apache2
 ```
+##### ErrorDocument
+```bash
+# Para cada error tendremos que poner la siguiente linea en el .htaccess de nuestra página, que se encuentra en /var/www/html
+ErrorDocument "Codigo de Error" /error/"archivo para ese error".html
+# El directorio error ha sido creado previamente para poner ahí las paginas que se mostrarán cuando ocurran esos errores
+```
+Despues de incluir varios errores quedaría algo así\
+![Alt](webroot/images/errordocument1.png)
+
+##### Redirección HTTP a HTTPS
+```bash
+# Primero habilitamos el modulo rewrite
+sudo a2enmod rewrite
+#Luego vamos al .htacces de nuestra pagina, se encuentra en /var/www/html y ponemos lo siguiente
+RewriteEngine On 
+RewriteCond %{SERVER_PORT} 80 
+RewriteRule ^(.*)$ https://www.dominio.com/$1 [R,L]
+```
+Quedará algo así\
+![Alt](webroot/images/redirect1.png)\
+Explicación de las directivas de .httaccess
+- **Options +FollowSymLinks** - es una directiva de Apache, requisito previo para mod_rewrite. 
+- **RewriteEngine On** - habilita mod_rewrite. 
+- **RewriteCond  %{SERVER_PORT}  80** - sirve para indicar que todas las peticiones que se realicen al puerto 80 (puerto por defecto de Apache para servicio web), deseamos que vayan a través de la regla especificada. 
+- **RewriteRule** - define una regla particular. 
+Dentro de la regla de reescritura, la primera cadena de caracteres después de RewriteRule, define lo que la URL original parece. 
+La segunda cadena después de RewriteRule define la nueva URL. 
+
+  - **$1** - Este carácter especial, sustituye (o indica) la parte entre paréntesis, especificada en la primera cadena. Básicamente, lo que haces es asegurar que las sub-páginas redireccionan a la misma sub-página y no a la página principal. Puede omitirlo para redirigir a la página principal. (Si usted no tiene el mismo contenido en el nuevo directorio que había en el antiguo directorio, deje esta expresión regular 
+
+  - **[R,L]**- Esta opción, realiza una redirección, y también deshabilita que las reglas de reescritura que estén escritas después afecten a la dirección URL (una buena idea para añadir después de la última rewrite rule).
+##### Enjaular Usuarios
+```bash
+# Crear el grupo para meter a los usuarios enjaulados
+sudo groupadd sftpusers
+# Creación del usuario y cambio de contraseña
+sudo useradd -g www-data -G sftpusers -m -d /var/www/nombredeusuario nombredeusuario
+
+sudo passwd nombredeusuario
+# El propietario del directorio jaula y los directorios sobre este, debe ser root. 
+# El home del usuario pertenece al root 
+sudo chown root:root /var/www/nombredeusuario
+# Eliminar el permiso de escritura 
+sudo chmod 555 /var/www/nombredeusuario
+```
+Por lo tanto, el usuario no tendría privilegios de escritura sobre su directorio. Para evitar ese problema se crea un directorio ‘ httpdocs ’, dentro de la jaula, que sea de propiedad y es allí donde él pueda escribir como leer archivos.
+```bash
+# Creacion de la carpeta httpdocs
+sudo mkdir /var/www/nombredeusuario/httpdocs
+# Permisos de httpdocs
+sudo chmod2775 –R /var/www/nombredeusuario/httpdocs
+# Propietarios de httpdocs
+sudo chown nombredeusuario:www-data –R /var/www/nombredeusuario/httpdocs
+```
+Editar /etc/ssh/sshd_config
+```bash 
+# Subsystem sftp /usr/lib/openssh
+Subsystem sftp internal
+Match Group sftpusers 
+ChrootDirectory %h
+ForceCommand internal-sftp -u 2 
+AllowTcpForwarding yes 
+PermitTunnel no 
+X11Forwarding no
+```
 #### 1.1.7 DNS
 #### 1.1.8 SFTP
 #### 1.1.9 Apache Tomcat
 #### 1.1.10 LDAP
 
-### 1.2 Windows 11
-#### 1.2.1 **Configuración inicial**
-##### **Nombre y configuración de red**
-##### **Cuentas administradoras**
 #### 1.2.2 **Navegadores**
 #### 1.2.3 **MobaXTerm**
 
@@ -363,8 +462,6 @@ sudo systemctl restart apache2
 2. Pero aún conservaremos la carpeta y los archivos en remoto, los cuales si queremos podemos reutilizar para volver a crear un proyecto con ellos, o eliminarlos tambien.
 
 #### 1.2.5 **Visual Studio Code**
-## 2. GitHub
-## 3.Entorno de Explotación
 
 ---
 
