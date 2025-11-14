@@ -7,6 +7,21 @@
 | CIBERSEGURIDAD
 | DWES Tema 2. INSTALACIÓN, CONFIGURACIÓN Y DOCUMENTACIÓN DE ENTORNO DE DESARROLLO Y DEL ENTORNO DE EXPLOTACIÓN |
 
+- [CFGS Desarrollo de Aplicaciones Web](#cfgs-desarrollo-de-aplicaciones-web)
+  - [2. GitHub](#2-github)
+    - [Requisitos previos](#requisitos-previos)
+    - [Crear un repositorio en GitHub](#crear-un-repositorio-en-github)
+    - [Clonar un repositorio en tu máquina local](#clonar-un-repositorio-en-tu-máquina-local)
+    - [Añadir archivos y hacer commits](#añadir-archivos-y-hacer-commits)
+    - [Enviar cambios al repositorio remoto (push)](#enviar-cambios-al-repositorio-remoto-push)
+    - [Obtener cambios del repositorio remoto (pull)](#obtener-cambios-del-repositorio-remoto-pull)
+    - [Otras funciones](#otras-funciones)
+      - [Ver el estado de los archivos:](#ver-el-estado-de-los-archivos)
+      - [Ver historial de commits:](#ver-historial-de-commits)
+      - [Crear una nueva rama:](#crear-una-nueva-rama)
+      - [Cambiar de rama:](#cambiar-de-rama)
+
+
 ## 2. GitHub
 ### Requisitos previos
 1. Tener una cuenta en [GitHub](https://github.com/)
