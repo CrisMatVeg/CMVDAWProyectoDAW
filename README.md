@@ -8,7 +8,7 @@
 | DWES Tema 2. INSTALACIÓN, CONFIGURACIÓN Y DOCUMENTACIÓN DE ENTORNO DE DESARROLLO Y DEL ENTORNO DE EXPLOTACIÓN |
 
 [**Servidor de Desarrollo**](./READMEUS.md)\
-[**Windows 11**](./READMEW11.md)\
+[**Cliente de Desarrollo**](./READMEW11.md)\
 [**Git**](./READMEGIT.md)\
 [**Entorno de Explotación**](./READMEEE.md)
 ---
