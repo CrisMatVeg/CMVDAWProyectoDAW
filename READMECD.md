@@ -18,6 +18,7 @@
         - [**Debug**](#debug)
         - [**Conexión con bases de datos**](#conexión-con-bases-de-datos)
       - [1.2.5 **Visual Studio Code**](#125-visual-studio-code)
+        - [PHP Documentor en el cliente](#php-documentor-en-el-cliente)
 
 ### 1.2 Cliente de Desarrollo
 
@@ -78,6 +79,114 @@ Tanto para Pull como para Push la ventana que se abrirá será la misma, primero
 ![Alt](webroot/images/netbeansdb3.png)
 
 #### 1.2.5 **Visual Studio Code**
+##### PHP Documentor en el cliente
+**1. Requisitos del sistema**
+
+- Sistema operativo: Windows 10
+- Editor: Visual Studio Code
+- PHP instalado (uso por CLI)
+- Archivo `phpDocumentor.phar`
+
+---
+
+**2. Comprobación de PHP**
+
+Abrir una terminal (CMD o PowerShell) y ejecutar:
+
+```bash
+php -v
+```
+Debe mostrarse la versión de PHP instalada.\
+Para conocer la ruta del ejecutable:
+```bash
+where php
+```
+
+Ejemplo de salida:
+```
+C:\php\php.exe
+```
+
+**3. Activar el archivo php.ini**
+
+Si al ejecutar:
+
+```
+php --ini
+```
+
+no aparece ningún archivo php.ini, significa que PHP no está cargando configuración.
+
+*Solución*
+
+Acceder a la carpeta donde está PHP (por ejemplo C:\php)
+
+Copiar uno de los archivos:
+
+`php.ini-development` (recomendado para desarrollo)
+
+`php.ini-production`
+
+Renombrarlo a:
+
+`php.ini`
+
+**4. Configuración correcta del php.ini**
+
+Abrir php.ini y comprobar las siguientes líneas:
+
+```ini
+extension_dir = "C:\php\ext"
+extension=mbstring
+```
+
+Guardar el archivo.\
+Cerrar y volver a abrir la terminal.
+
+Verificar:
+
+```
+php -m
+```
+
+Debe aparecer:\
+`mbstring`
+
+**5. Instalación y uso de phpDocumentor**
+
+Colocar el archivo phpDocumentor.phar en el proyecto o en una carpeta accesible.
+
+Ejemplo de ejecución desde la raíz del proyecto:
+
+```
+php phpDocumentor.phar run -d ./ -t ./docs
+```
+
+Parámetros:
+
+`-d ./ → código fuente`\
+`-t ./docs → carpeta destino de la documentación`
+
+**6. Carpeta .phpdoc/cache**
+
+Durante la ejecución se genera automáticamente:
+
+`.phpdoc/cache`
+
+Se puede ignorar o añadir al .gitignore
+
+**7. Uso con Visual Studio Code**
+
+Abrir el proyecto como carpeta completa
+
+Usar la terminal integrada
+
+Ejecutar phpDocumentor desde VS Code
+
+Abrir la documentación en:
+
+`docs/index.html`
+
 ---
 
 > **Cristian Mateos Vega**  
