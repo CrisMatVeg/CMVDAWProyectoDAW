@@ -15,11 +15,13 @@
     - [Añadir archivos y hacer commits](#añadir-archivos-y-hacer-commits)
     - [Enviar cambios al repositorio remoto (push)](#enviar-cambios-al-repositorio-remoto-push)
     - [Obtener cambios del repositorio remoto (pull)](#obtener-cambios-del-repositorio-remoto-pull)
+    - [Crear Releases](#crear-releases)
     - [Otras funciones](#otras-funciones)
       - [Ver el estado de los archivos:](#ver-el-estado-de-los-archivos)
       - [Ver historial de commits:](#ver-historial-de-commits)
       - [Crear una nueva rama:](#crear-una-nueva-rama)
       - [Cambiar de rama:](#cambiar-de-rama)
+    - [Conexión son SSH](#conexión-son-ssh)
 
 
 ## 2. GitHub
@@ -70,6 +72,7 @@ git push origin main
 git pull origin main
 ```
 
+### Crear Releases
 ### Otras funciones
 #### Ver el estado de los archivos:
 ```bash
@@ -87,6 +90,11 @@ git checkout -b nombre-rama
 ```bash
 git checkout nombre-rama
 ```
+
+### Conexión son SSH
+1. Generar Claves
+2. Copiar clave pública y ponerla en GitHub
+3. Añadir clave a ssh-agent
 ---
 
 > **Cristian Mateos Vega**  

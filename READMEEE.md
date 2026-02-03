@@ -11,6 +11,7 @@
   - [3.Entorno de Explotación](#3entorno-de-explotación)
       - [Gestión de archivos en EE](#gestión-de-archivos-en-ee)
       - [Creación de subdominios](#creación-de-subdominios)
+      - [Añadir registros DNS para virtual hosts](#añadir-registros-dns-para-virtual-hosts)
 
 
 ## 3.Entorno de Explotación
@@ -25,6 +26,16 @@ Configurar el nombre de nuestro subdominio y la ubicacion de los archivos
 
 ![Alt](webroot/images/eesub2.png)
 
+#### Añadir registros DNS para virtual hosts
+1. Añadir registro DNS
+En Plesk vamos a la ventana de Hosting y DNS y le damos a DNS
+Ahí dentro le damos a Añadir registro\
+![Alt](webroot/images/vh1.png)
+- En tipo de registro ponemos A
+- Ponemos un nombre de dominio
+- El TTL lo dejamos como está
+- Dirección IP ponemos el de nuestro servidor Apache
+- Luego tendremos que darle a actualizar y ya estaría
 ---
 
 > **Cristian Mateos Vega**  
