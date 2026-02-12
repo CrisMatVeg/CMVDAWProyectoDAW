@@ -1,4 +1,3 @@
-
 # CFGS Desarrollo de Aplicaciones Web
 
 |  CFGS DESARROLLO  DE APLICACIONES WEB |
@@ -8,57 +7,71 @@
 | CIBERSEGURIDAD
 | DWES Tema 2. INSTALACIÓN, CONFIGURACIÓN Y DOCUMENTACIÓN DE ENTORNO DE DESARROLLO Y DEL ENTORNO DE EXPLOTACIÓN |
 
-
 - [CFGS Desarrollo de Aplicaciones Web](#cfgs-desarrollo-de-aplicaciones-web)
   - [1. Entorno de Desarrollo](#1-entorno-de-desarrollo)
-    - [1.1 Ubuntu Server 24.04.3 LTS](#11-ubuntu-server-24043-lts)
-      - [1.1.1 **Configuración inicial**](#111-configuración-inicial)
-        - [Nombre y configuraicón de red](#nombre-y-configuraicón-de-red)
-        - [**Actualizar el sistema**](#actualizar-el-sistema)
-        - [**Configuración fecha y hora**](#configuración-fecha-y-hora)
-        - [**Cuentas administradoras**](#cuentas-administradoras)
-        - [**Habilitar cortafuegos**](#habilitar-cortafuegos)
+    - [1.1 Sistema Operativo Ubuntu Server 24.04 LTS](#11-sistema-operativo-ubuntu-server-2404-lts)
+      - [Configuración inicial](#configuración-inicial)
+        - [Nombre y configuración de red](#nombre-y-configuración-de-red)
+        - [Actualizar el sistema](#actualizar-el-sistema)
+        - [Configuración fecha y hora](#configuración-fecha-y-hora)
+        - [Cuentas administradoras](#cuentas-administradoras)
+        - [Habilitar cortafuegos](#habilitar-cortafuegos)
           - [Monitorizacion](#monitorizacion)
           - [Mantenimiento](#mantenimiento)
-      - [1.1.2 Instalación del servidor web Apache HTTP](#112-instalación-del-servidor-web-apache-http)
-        - [Instalación](#instalación)
+  - [1.2 Servicios](#12-servicios)
+    - [1.2.1 Apache HTTP](#121-apache-http)
+      - [Instalación](#instalación)
         - [Verficación del servicio](#verficación-del-servicio)
-        - [Virtual Hosts](#virtual-hosts)
+      - [Configuración](#configuración)
         - [Permisos y usuarios](#permisos-y-usuarios)
         - [ErrorDocument](#errordocument)
         - [Redirección HTTP a HTTPS](#redirección-http-a-https)
-        - [Ficheros .log de Apache](#ficheros-log-de-apache)
-      - [1.1.3 PHP](#113-php)
-        - [Proceso para instalar y configurar PHP 8.3 como servicio FPM (FastCGI Process Manager) en un servidor Apache sobre Ubuntu](#proceso-para-instalar-y-configurar-php-83-como-servicio-fpm-fastcgi-process-manager-en-un-servidor-apache-sobre-ubuntu)
-        - [Módulo php8.3-intl](#módulo-php83-intl)
-        - [Ficheros .log de PHP](#ficheros-log-de-php)
-        - [**PHPDocumentor**](#phpdocumentor)
-          - [INSTALACIÓN EN EL SERVIDOR UBUNTU SERVER](#instalación-en-el-servidor-ubuntu-server)
-      - [1.1.4 MariaDB](#114-mariadb)
-      - [1.1.5 XDebug](#115-xdebug)
-      - [1.1.6 Servidor web seguro Apache HTTPS](#116-servidor-web-seguro-apache-https)
-      - [1.1.7 DNS](#117-dns)
-      - [1.1.8 SFTP](#118-sftp)
-        - [Enjaular Usuarios](#enjaular-usuarios)
-      - [1.1.9 Apache Tomcat](#119-apache-tomcat)
-      - [1.1.10 LDAP](#1110-ldap)
+      - [Monitorización](#monitorización)
+      - [Mantenimiento](#mantenimiento-1)
+    - [1.2.2 PHP](#122-php)
+      - [Instalación antigua](#instalación-antigua)
+      - [Instalación nueva](#instalación-nueva)
+        - [Configuración de Apache2 con PHP-FPM](#configuración-de-apache2-con-php-fpm)
+        - [Activarlo para todos los virtualhost](#activarlo-para-todos-los-virtualhost)
+      - [Módulos PHP](#módulos-php)
+        - [Como instalar módulos](#como-instalar-módulos)
+        - [Verificación de módulos activos](#verificación-de-módulos-activos)
+      - [Configuración PHP](#configuración-php)
+      - [Entorno de desarrollo PHP](#entorno-de-desarrollo-php)
+      - [Entorno de explotación PHP](#entorno-de-explotación-php)
+      - [Monitorización PHP](#monitorización-php)
+      - [Mantenimiento PHP](#mantenimiento-php)
+    - [1.2.3 MariaDB](#123-mariadb)
+      - [Instalación](#instalación-1)
+      - [Configuración](#configuración-1)
+    - [1.2.4 XDebug](#124-xdebug)
+      - [Instalación](#instalación-2)
+      - [Configuración](#configuración-2)
+    - [1.2.5 Apache HTTPS](#125-apache-https)
+    - [1.2.6 DNS](#126-dns)
+        - [Virtual Hosts](#virtual-hosts)
+    - [1.2.7 SFTP](#127-sftp)
+      - [Enjaulado de usuarios](#enjaulado-de-usuarios)
+    - [1.2.8 Apache Tomcat](#128-apache-tomcat)
+    - [1.2.9 LDAP](#129-ldap)
+  - [2. Documentación de Código](#2-documentación-de-código)
+    - [2.1 PHPDoc / phpDocumentor](#21-phpdoc--phpdocumentor)
+
+---
 
 ## 1. Entorno de Desarrollo
-
-### 1.1 Ubuntu Server 24.04.3 LTS
-
 Este documento es una guía detallada del proceso de instalación y configuración de un servidor de aplicaciones en Ubuntu Server utilizando Apache, con soporte PHP y MySQL
+
+### 1.1 Sistema Operativo Ubuntu Server 24.04 LTS
 
 ```bash
 #Para ver version del sistema:
 uname -a
 ```
+#### Configuración inicial
+##### Nombre y configuración de red
 
-#### 1.1.1 **Configuración inicial**
-
-##### Nombre y configuraicón de red
-
-> **Nombre de la máquina**: CMV-USLimpia\
+> **Nombre de la máquina**: CMV-USLimpia
 ```bash
 #Se ve con: 
 hostname
@@ -116,22 +129,21 @@ network:
       routes:
         - to: default
           via: 10.199.8.1
-  version: 2
-````
+            version: 2
+```
 
-##### **Actualizar el sistema**
+##### Actualizar el sistema
 
 ```bash
 sudo apt update
 sudo apt upgrade
 ```
-
-##### **Configuración fecha y hora**
+##### Configuración fecha y hora
 
 [Establecer fecha, hora y zona horaria](https://somebooks.es/establecer-la-fecha-hora-y-zona-horaria-en-la-terminal-de-ubuntu-20-04-lts/ "Cambiar fecha y hora")
 
 
-##### **Cuentas administradoras**
+##### Cuentas administradoras
 
 > - [X] root(inicio)
 > - [X] miadmin/paso
@@ -140,11 +152,10 @@ sudo apt upgrade
 ```bash
 #Los usuarios se ven en:
 sudo cat /etc/passwd [|grep "nombre de usuario para filtrar"]
-
 #Para ver los usuarios por grupo:
 sudo cat /etc/group
 ```
-##### **Habilitar cortafuegos**
+##### Habilitar cortafuegos
 ```bash
 #Para encender cortafuegos:
 sudo ufw start
@@ -169,9 +180,14 @@ sudo ufw disable
 # Reseteamos todas las reglas a la configuración inicial           
 sudo ufw reset             
 ```
-#### 1.1.2 Instalación del servidor web Apache HTTP
 
-##### Instalación
+---
+
+## 1.2 Servicios
+
+### 1.2.1 Apache HTTP
+
+#### Instalación
 ```bash
 sudo apt install apache2
 sudo ufw allow 80
@@ -181,16 +197,8 @@ sudo ufw allow 80
 sudo service apache2 status
 sudo systemctl status apache2
 ```
-##### Virtual Hosts
-0. Previamente crear la regla DNS en explotación
-1. Comprobar usuario enjaulado SFTP\
-El sitio creado anteriormente va a ser de un usuario enjaulado (ver en el apartado de Enjaulado de usuarios)
-2. Crear nuevo sitio.conf\
-Copiamos el archivo de configuracion del sitio por defecto en un nuevo archivo ``nuevo-sitio``.conf y dentro lo tenemos que dejar así:\
-![Alt](webroot/images/vh2.png)
-Ahora metemos los archivos de nuestro sitio en httpdocs en la ruta indicada conectandonos con el usuarioenjaulado1 por sftp
-- Si utiliza base de datos y tenemos los respectivos scripts de esa base de datos para crearla y darle carga inicial los ejecutamos con ``sudo mariadb -u adminsql -p < script.sql``\
-Ahora si entramos en http://(ServerName del nuevo sitio) tiene que salirnos el index que subimos antes a httpdocs
+
+#### Configuración
 
 ##### Permisos y usuarios
 ```bash
@@ -248,10 +256,68 @@ La segunda cadena después de RewriteRule define la nueva URL.
   - **$1** - Este carácter especial, sustituye (o indica) la parte entre paréntesis, especificada en la primera cadena. Básicamente, lo que haces es asegurar que las sub-páginas redireccionan a la misma sub-página y no a la página principal. Puede omitirlo para redirigir a la página principal. (Si usted no tiene el mismo contenido en el nuevo directorio que había en el antiguo directorio, deje esta expresión regular 
 
   - **[R,L]**- Esta opción, realiza una redirección, y también deshabilita que las reglas de reescritura que estén escritas después afecten a la dirección URL (una buena idea para añadir después de la última rewrite rule).
-##### Ficheros .log de Apache
 
-#### 1.1.3 PHP
-##### Proceso para instalar y configurar PHP 8.3 como servicio FPM (FastCGI Process Manager) en un servidor Apache sobre Ubuntu
+#### Monitorización
+Apache genera ficheros de log que permiten supervisar el funcionamiento del servidor y depurar problemas:
+
+Ficheros principales de log:
+
+Accesos: `/var/log/apache2/access.log`
+Registra todas las solicitudes HTTP recibidas por el servidor, con información como IP, fecha, método, URL, código de respuesta y user-agent.
+```bash
+tail -f /var/log/apache2/access.log
+```
+
+Errores: `/var/log/apache2/error.log`
+Registra errores de configuración, fallos en scripts PHP, problemas con módulos o permisos.
+```bash
+tail -f /var/log/apache2/error.log
+```
+Monitorización en tiempo real:
+
+Comprobar actividad en tiempo real:
+```bash
+sudo tail -f /var/log/apache2/access.log /var/log/apache2/error.log
+```
+
+Revisar el uso de procesos Apache:
+```bash
+ps aux | grep apache2
+```
+
+Comprobación del estado del servicio:
+```bash
+sudo systemctl status apache2
+sudo apache2ctl configtest  # Verifica la sintaxis de la configuración
+```
+
+#### Mantenimiento
+Reiniciar Apache: Para aplicar cambios de configuración o módulos
+```bash
+sudo systemctl restart apache2
+```
+
+Recargar configuración sin interrumpir conexiones activas:
+```bash
+sudo systemctl reload apache2
+```
+
+Habilitar/Deshabilitar módulos:
+```bash
+sudo a2enmod nombre_modulo
+sudo a2dismod nombre_modulo
+sudo systemctl reload apache2
+```
+
+Backup de configuración:
+```bash
+sudo cp -r /etc/apache2 /etc/apache2_backup_$(date +%F)
+```
+---
+
+### 1.2.2 PHP
+
+#### Instalación antigua
 ```bash
 #Instala herramientas para administrar los repositorios de software, como add-apt-repository
 sudo apt install software-properties-common -y
@@ -285,6 +351,78 @@ sudo a2enconf php8.3-fpm
 #Reinicia Apache para que los cambios surtan efecto.
 sudo systemctl restart apache2
 ```
+
+#### Instalación nueva
+```bash
+sudo apt install php8.3-fpm php8.3
+sudo systemctl restart php8.3-fpm
+```
+
+##### Configuración de Apache2 con PHP-FPM
+---
+
+Para habilitar los modulos Proxy_FCGI y SetEnvif
+```bash
+sudo a2enmod proxy_fcgi setenvif
+```
+
+##### Activarlo para todos los virtualhost
+
+El fichero de configuración php8.3-fpm en el directorio /etc/apache2/conf-available, por defecto funciona cuando php-fpm está escuchando en un socket UNIX
+Se configura de la siguiente forma:
+
+Se abre el fichero /etc/apache2/conf-available/php8.3-fpm.conf
+
+```bash
+sudo nano /etc/apache2/conf-available/php8.3-fpm.conf
+``` 
+Y se copia esto o se comprueba si ya está:
+```bash
+ <FilesMatch ".+\.ph(?:ar|p|tml)$">
+    SetHandler "proxy:unix:/run/php/php8.3-fpm.sock|fcgi://localhost"
+</FilesMatch>
+```   
+  
+Por último activamos y recargamos apache2:
+
+```bash
+sudo a2enconf php8.3-fpm
+systemctl reload apache2
+```
+#### Módulos PHP
+| Módulo             | Descripción                                                                                                       | Entorno recomendado                    |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| `php8.3-intl`      | Internacionalización: formatea fechas, monedas y cadenas según localización.                                      | Dev / Prod                             |
+| `php8.3-mbstring`  | Soporte para cadenas multibyte (UTF-8, UTF-16). Necesario para aplicaciones multilingües y manejo de formularios. | Dev / Prod                             |
+| `php8.3-xml`       | Procesamiento de XML: DOM, SimpleXML, XMLReader/Writer. Necesario para APIs y configuración en XML.               | Dev / Prod                             |
+| `php8.3-curl`      | Permite realizar peticiones HTTP desde PHP, esencial para consumir APIs externas.                                 | Dev / Prod                             |
+| `php8.3-mysql`     | Conector MySQL/MariaDB para PHP (mysqli y PDO). Indispensable para bases de datos.                                | Dev / Prod                             |
+| `php8.3-pdo`       | Interfaz de acceso a bases de datos de manera segura, soporta múltiples motores.                                  | Dev / Prod                             |
+| `php8.3-gd`        | Manipulación de imágenes (crear, redimensionar, procesar PNG, JPEG).                                              | Dev / Prod                             |
+| `php8.3-zip`       | Permite crear y extraer archivos ZIP.                                                                             | Dev / Prod                             |
+| `php8.3-bcmath`    | Operaciones matemáticas de precisión arbitraria, útil para cálculos financieros.                                  | Dev / Prod                             |
+| `php8.3-opcache`   | Cache de código PHP compilado para mejorar rendimiento. Normalmente activo en producción.                         | Prod                                   |
+| `php8.3-soap`      | Permite consumir y crear servicios web SOAP.                                                                      | Dev / Prod si se usan APIs SOAP        |
+| `php8.3-json`      | Soporte para codificación y decodificación de JSON. Esencial para APIs REST y almacenamiento de datos.            | Dev / Prod                             |
+| `php8.3-xmlrpc`    | Comunicación vía XML-RPC con otros servicios web.                                                                 | Dev / Prod si se usan servicios legacy |
+| `php8.3-gmp`       | Operaciones matemáticas con números grandes y criptografía.                                                       | Dev / Prod según necesidades           |
+| `php8.3-memcached` | Conexión a sistemas de cache Memcached, mejora rendimiento de aplicaciones web.                                   | Prod                                   |
+| `php8.3-redis`     | Conexión a Redis, útil para cache, sesiones y colas de trabajo.                                                   | Prod                                   |
+| `php8.3-xdebug`    | Depuración avanzada, trazas y profiling de scripts. **Solo en desarrollo**.                                       | Dev                                    |
+| `php8.3-ldap`      | Conexión con servidores LDAP (por ejemplo Active Directory).                                                      | Dev / Prod si se usan servicios LDAP   |
+| `php8.3-mbstring`  | Soporte para cadenas multibyte. Indispensable para UTF-8.                                                         | Dev / Prod                             |
+
+##### Como instalar módulos
+```bash
+sudo apt install "nombre del modulo"
+sudo systemctl restart php-fpm
+```
+##### Verificación de módulos activos
+```bash
+php -m         # Lista todos los módulos instalados y activos
+php -i | grep "modulo"  # Busca un módulo específico
+```
+#### Configuración PHP
 En **/etc/php/8.3/apache2/php.ini** y **/etc/php/8.3/fpm/php.ini**
 
 - Cambiar **display_errors** a "On"
@@ -295,21 +433,314 @@ En **/etc/php/8.3/apache2/php.ini** y **/etc/php/8.3/fpm/php.ini**
 
 ![Alt](webroot/images/memory_limit_php.png)
 
-##### Módulo php8.3-intl
-Permite que PHP muestre información adaptada a la región e idioma, sin que tengas que hacerlo manualmente.
-```bash
-#Instalar
-sudo apt install php8.3-intl
-sudo systemctl restart php-fpm
-```
 En **/etc/php/8.3/apache2/php.ini** y **/etc/php/8.3/fpm/php.ini**
 
 - Cambiar **date.timezone** a "Europe/Madrid"
 
 ![Alt](webroot/images/datetimezone1.png)
-##### Ficheros .log de PHP
-##### **PHPDocumentor**
-###### INSTALACIÓN EN EL SERVIDOR UBUNTU SERVER
+
+#### Entorno de desarrollo PHP
+Activar errores:
+En `/etc/php/8.3/fpm/php.ini` y `/etc/php/8.3/apache2/php.ini`:
+```ini
+display_errors = On
+display_startup_errors = On
+error_reporting = E_ALL
+log_errors = On
+error_log = /var/log/php_errors.log
+```
+
+Registro de errores personalizado:
+```bash
+sudo touch /var/log/php_errors.log
+sudo chown www-data:www-data /var/log/php_errors.log
+sudo chmod 664 /var/log/php_errors.log
+```
+
+Recargar PHP-FPM para aplicar cambios:
+```bash
+sudo systemctl restart php8.3-fpm
+sudo systemctl reload apache2
+```
+#### Entorno de explotación PHP
+Configurar php.ini:
+```ini
+display_errors = Off
+display_startup_errors = Off
+log_errors = On
+error_log = /var/log/php_errors.log
+```
+
+Nivel de registro recomendado:
+```ini
+error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
+```
+#### Monitorización PHP
+Ficheros log de PHP-FPM:
+
+Error log de PHP-FPM: `/var/log/php8.3-fpm.log`
+```bash
+tail -f /var/log/php8.3-fpm.log
+```
+
+Registro de errores de scripts:
+
+Cada script PHP puede generar errores en `/var/log/php_errors.log` definido en `php.ini`
+
+Estado del servicio:
+```bash
+sudo systemctl status php8.3-fpm
+sudo systemctl restart php8.3-fpm
+```
+#### Mantenimiento PHP
+Reiniciar PHP-FPM:
+```bash
+sudo systemctl restart php8.3-fpm
+```
+
+Recargar configuración sin interrumpir conexiones:
+```bash
+sudo systemctl reload php8.3-fpm
+```
+
+Verificar módulos activos:
+```bash
+php -m
+```
+
+Backup de configuración:
+```bash
+sudo cp -r /etc/php/8.3 /etc/php/8.3_backup_$(date +%F)
+```
+---
+
+### 1.2.3 MariaDB
+
+#### Instalación
+```bash
+#Instalar MariaDB
+sudo apt udpate
+sudo apt install mariadb-server -y
+```
+#### Configuración
+```bash
+#Cambiar en el fichero indicado la linea bind-address = 127.0.0.1 (lo cambiamos a 0.0.0.0)
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+```
+![Alt](webroot/images/mariadb1.png)
+```bash
+#Reiniciamos el servicio
+sudo systemctl restart mariadb
+
+#Comprobamos puerto usado por MariaDB (usará el 3306 por defecto)
+sudo ss -punta |grep mariadb
+
+#Lo habilitamos
+sudo ufw allow 3306
+
+#Entramos en la consola de MariaDB
+sudo mariadb
+
+#Creamos un nuevo usuario
+CREATE USER 'adminsql'@'%' IDENTIFIED BY 'paso'
+GRANT ALL ON *.* TO 'adminsql'@'%' WITH GRANT OPTION;
+
+#Listar todos los usuarios y desde que host pueden conectarse
+SELECT User, Host FROM mysql.user;
+
+#Asegurar MariaDB ejecutando un sript de seguridad
+sudo mysql_secure_installation
+
+- En el primer paso preguntará por la contraseña de root para MariaDB, pulsa la tecla Enter ya que no hay contraseña definida.
+- La siguiente, preguntará si quieres asignar una contraseña para el usuario “root”, le damos que si y le ponemos una.
+- En el tercer paso preguntará si quieres eliminar usuario anónimo, aquí indica que Sí quieres borrar los datos.
+- Después preguntará si quieres desactivar el acceso remoto del usuario “root”, aquí indica que Sí quieres desactivar acceso remoto para usuario por seguridad.
+- De nuevo preguntará si quieres eliminar la base de datos test, aquí indica de nuevo que Sí quieres borrar las base de datos de prueba.
+- Por último, preguntará si quieres recargar privilegios, aquí indica que Sí.
+```
+---
+
+### 1.2.4 XDebug
+
+#### Instalación
+```bash
+#Instalar
+sudo apt install php8.3-xdebug
+```
+#### Configuración
+```bash
+#Entrar en /etc/php/8.3/fpm/conf.d/20-xdebug.ini y añadir
+xdebug.mode=develop,debug
+xdebug.start_with_request=yes
+xdebug.client_host=127.0.0.1
+xdebug.client_port=9003
+xdebug.log=/tmp/xdebug.log
+xdebug.log_level=7
+xdebug.idekey="netbeans-xdebug"
+xdebug.discover_client_host=1
+
+#Reiniciar servidor
+sudo systemctl restart php8.3-fpm
+```
+
+### 1.2.5 Apache HTTPS
+
+![Alt](webroot/images/https0.png)
+```bash
+#Para crear certificado digital:
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/"nombre".key -out /etc/ssl/certs/"nombre".crt
+
+luego nos pedirá varios datos, los ponemos y ya estaría creado
+#Comprobar certificados en:
+sudo ls /etc/ssl/private |grep "nombre"
+sudo ls /etc/ssl/certs |grep "nombre"
+
+#Habilitar módulo ssl
+sudo a2enmod ssl
+
+#Crear (o copiar) configuración del sitio seguro
+sudo cp default-sss.conf "nombre".conf
+
+#Cambiar rutas al certificado dentro de "nombre".conf donde he marcado en verde
+```
+![Alt](webroot/images/https1.png)
+
+```bash
+Crear configuración de sitio seguro:
+Archivo: /etc/apache2/sites-available/mi_sitio.conf
+
+<VirtualHost *:443>
+    ServerAdmin webmaster@mi_sitio.com
+    ServerName mi_sitio.com
+    DocumentRoot /var/www/html
+
+    SSLEngine on
+    SSLCertificateFile /etc/ssl/certs/mi_sitio.crt
+    SSLCertificateKeyFile /etc/ssl/private/mi_sitio.key
+
+    <Directory /var/www/html>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error_ssl.log
+    CustomLog ${APACHE_LOG_DIR}/access_ssl.log combined
+</VirtualHost>
+
+
+# Activar sitio y puerto HTTPS:
+
+sudo ufw allow 443
+sudo a2ensite mi_sitio.conf
+sudo systemctl reload apache2
+
+
+# Redirección HTTP a HTTPS:
+
+<VirtualHost *:80>
+    ServerName mi_sitio.com
+    Redirect permanent / https://mi_sitio.com/
+</VirtualHost>
+```
+
+### 1.2.6 DNS
+
+##### Virtual Hosts
+0. Previamente crear la regla DNS en explotación
+1. Comprobar usuario enjaulado SFTP\
+El sitio creado anteriormente va a ser de un usuario enjaulado (ver en el apartado de Enjaulado de usuarios)
+2. Crear nuevo sitio.conf\
+Copiamos el archivo de configuracion del sitio por defecto en un nuevo archivo ``nuevo-sitio``.conf y dentro lo tenemos que dejar así:\
+![Alt](webroot/images/vh2.png)
+Ahora metemos los archivos de nuestro sitio en httpdocs en la ruta indicada conectandonos con el usuarioenjaulado1 por sftp
+- Si utiliza base de datos y tenemos los respectivos scripts de esa base de datos para crearla y darle carga inicial los ejecutamos con ``sudo mariadb -u adminsql -p < script.sql``\
+Ahora si entramos en http://(ServerName del nuevo sitio) tiene que salirnos el index que subimos antes a httpdocs
+
+### 1.2.7 SFTP
+
+#### Enjaulado de usuarios
+```bash
+# Crear el grupo para meter a los usuarios enjaulados
+sudo groupadd sftpusers
+# Creación del usuario y cambio de contraseña
+sudo useradd -g www-data -G sftpusers -m -d /var/www/nombredeusuario nombredeusuario
+
+sudo passwd nombredeusuario
+# El propietario del directorio jaula y los directorios sobre este, debe ser root. 
+# El home del usuario pertenece al root 
+sudo chown root:root /var/www/nombredeusuario
+# Eliminar el permiso de escritura 
+sudo chmod 555 /var/www/nombredeusuario
+```
+Por lo tanto, el usuario no tendría privilegios de escritura sobre su directorio. Para evitar ese problema se crea un directorio ‘ httpdocs ’, dentro de la jaula, que sea de propiedad y es allí donde él pueda escribir como leer archivos.
+```bash
+# Creacion de la carpeta httpdocs
+sudo mkdir /var/www/nombredeusuario/httpdocs
+# Permisos de httpdocs
+sudo chmod2775 –R /var/www/nombredeusuario/httpdocs
+# Propietarios de httpdocs
+sudo chown nombredeusuario:www-data –R /var/www/nombredeusuario/httpdocs
+```
+Editar /etc/ssh/sshd_config
+```bash 
+# Subsystem sftp /usr/lib/openssh
+Subsystem sftp internal
+Match Group sftpusers 
+ChrootDirectory %h
+ForceCommand internal-sftp -u 2 
+AllowTcpForwarding yes 
+PermitTunnel no 
+X11Forwarding no
+```
+---
+
+### 1.2.8 Apache Tomcat
+
+---
+
+### 1.2.9 LDAP
+
+---
+
+## 2. Documentación de Código
+**8. Como se hacen los comentarios para documentación PHPDoc**
+
+Usar siempre 
+```php
+/** 
+ * ...
+*/
+```
+
+Documentar:
+
+- Clases
+- Métodos
+- Controladores
+
+Usar etiquetas estándar:
+
+```php
+@package
+@author
+@version
+@param
+@return
+``` 
+Ejemplo:
+
+```php
+/**
+ * Controlador de Login
+ *
+ * @package Controladores
+ * @version 1.0
+ */
+ ```
+
+### 2.1 PHPDoc / phpDocumentor
+
 **1. Requisitos Mínimos**
 
 - **Sistema Operativo**: Ubuntu/Debian (o distribuciones basadas en APT)
@@ -376,177 +807,13 @@ sudo chmod -R 775 /var/www/html/CMVDWESAplicacionFinal
 * Se ejecuta el phpDocumentor
 ```bash
 phpdoc --directory . --target docs
+
+# --directory .: Busca archivos PHP en el directorio actual.
+
+# --target docs: Genera el HTML de salida en la carpeta docs.
 ```
---directory .: Busca archivos PHP en el directorio actual.
---target docs: Genera el HTML de salida en la carpeta docs.
-
-**8. Como se hacen los comentarios para documentación PHPDoc**
-
-Usar siempre 
-```php
-/** 
- * ...
-*/
-```
-
-Documentar:
-
-- Clases
-- Métodos
-- Controladores
-
-Usar etiquetas estándar:
-
-```php
-@package
-@author
-@version
-@param
-@return
-``` 
-
-Ejemplo:
-
-```php
-/**
- * Controlador de Login
- *
- * @package Controladores
- * @version 1.0
- */
- ```
-
-#### 1.1.4 MariaDB
-```bash
-#Instalar MariaDB
-sudo apt udpate
-sudo apt install mariadb-server -y
-
-#Cambiar en el fichero indicado la linea bind-address = 127.0.0.1 (lo cambiamos a 0.0.0.0)
-sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
-```
-![Alt](webroot/images/mariadb1.png)
-```bash
-#Reiniciamos el servicio
-sudo systemctl restart mariadb
-
-#Comprobamos puerto usado por MariaDB (usará el 3306 por defecto)
-sudo ss -punta |grep mariadb
-
-#Lo habilitamos
-sudo ufw allow 3306
-
-#Entramos en la consola de MariaDB
-sudo mariadb
-
-#Creamos un nuevo usuario
-CREATE USER 'adminsql'@'%' IDENTIFIED BY 'paso'
-GRANT ALL ON *.* TO 'adminsql'@'%' WITH GRANT OPTION;
-
-#Listar todos los usuarios y desde que host pueden conectarse
-SELECT User, Host FROM mysql.user;
-
-#Asegurar MariaDB ejecutando un sript de seguridad
-sudo mysql_secure_installation
-
-- En el primer paso preguntará por la contraseña de root para MariaDB, pulsa la tecla Enter ya que no hay contraseña definida.
-- La siguiente, preguntará si quieres asignar una contraseña para el usuario “root”, le damos que si y le ponemos una.
-- En el tercer paso preguntará si quieres eliminar usuario anónimo, aquí indica que Sí quieres borrar los datos.
-- Después preguntará si quieres desactivar el acceso remoto del usuario “root”, aquí indica que Sí quieres desactivar acceso remoto para usuario por seguridad.
-- De nuevo preguntará si quieres eliminar la base de datos test, aquí indica de nuevo que Sí quieres borrar las base de datos de prueba.
-- Por último, preguntará si quieres recargar privilegios, aquí indica que Sí.
-```
-#### 1.1.5 XDebug
-```bash
-#Instalar
-sudo apt install php8.3-xdebug
-
-#Entrar en /etc/php/8.3/fpm/conf.d/20-xdebug.ini y añadir
-xdebug.mode=develop,debug
-xdebug.start_with_request=yes
-xdebug.client_host=127.0.0.1
-xdebug.client_port=9003
-xdebug.log=/tmp/xdebug.log
-xdebug.log_level=7
-xdebug.idekey="netbeans-xdebug"
-xdebug.discover_client_host=1
-
-#Reiniciar servidor
-sudo systemctl restart php8.3-fpm
-```
-
-#### 1.1.6 Servidor web seguro Apache HTTPS
-![Alt](webroot/images/https0.png)
-```bash
-#Para crear certificado digital:
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/"nombre".key -out /etc/ssl/certs/"nombre".crt
-
-luego nos pedirá varios datos, los ponemos y ya estaría creado
-#Comprobar certificados en:
-sudo ls /etc/ssl/private |grep "nombre"
-sudo ls /etc/ssl/certs |grep "nombre"
-
-#Habilitar módulo ssl
-sudo a2enmod ssl
-
-#Crear (o copiar) configuración del sitio seguro
-sudo cp default-sss.conf "nombre".conf
-
-#Cambiar rutas al certificado dentro de "nombre".conf donde he marcado en verde
-```
-![Alt](webroot/images/https1.png)
-```bash
-#Activar puerto 443
-sudo ufw allow 443
-
-#Activar sitio seguro
-sudo a2ensite "nombre".conf
-
-#Reiniciar servidor apache
-sudo systemctl restart apache2
-```
-
-#### 1.1.7 DNS
-#### 1.1.8 SFTP
-##### Enjaular Usuarios
-```bash
-# Crear el grupo para meter a los usuarios enjaulados
-sudo groupadd sftpusers
-# Creación del usuario y cambio de contraseña
-sudo useradd -g www-data -G sftpusers -m -d /var/www/nombredeusuario nombredeusuario
-
-sudo passwd nombredeusuario
-# El propietario del directorio jaula y los directorios sobre este, debe ser root. 
-# El home del usuario pertenece al root 
-sudo chown root:root /var/www/nombredeusuario
-# Eliminar el permiso de escritura 
-sudo chmod 555 /var/www/nombredeusuario
-```
-Por lo tanto, el usuario no tendría privilegios de escritura sobre su directorio. Para evitar ese problema se crea un directorio ‘ httpdocs ’, dentro de la jaula, que sea de propiedad y es allí donde él pueda escribir como leer archivos.
-```bash
-# Creacion de la carpeta httpdocs
-sudo mkdir /var/www/nombredeusuario/httpdocs
-# Permisos de httpdocs
-sudo chmod2775 –R /var/www/nombredeusuario/httpdocs
-# Propietarios de httpdocs
-sudo chown nombredeusuario:www-data –R /var/www/nombredeusuario/httpdocs
-```
-Editar /etc/ssh/sshd_config
-```bash 
-# Subsystem sftp /usr/lib/openssh
-Subsystem sftp internal
-Match Group sftpusers 
-ChrootDirectory %h
-ForceCommand internal-sftp -u 2 
-AllowTcpForwarding yes 
-PermitTunnel no 
-X11Forwarding no
-```
-#### 1.1.9 Apache Tomcat
-#### 1.1.10 LDAP
-
 ---
 
 > **Cristian Mateos Vega**  
 > Curso: 2025/2026  
-> 2º Curso CFGS Desarrollo de Aplicaciones Web  
+> 2º Curso CFGS Desarrollo de Aplicaciones Web 
